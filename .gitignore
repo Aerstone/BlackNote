@@ -1,0 +1,9 @@
+k
+*.db
+*.tmp
+*.ref
+pastes
+*.cert
+*.crt
+*.key
+*.pem

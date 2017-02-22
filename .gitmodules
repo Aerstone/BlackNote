@@ -1,0 +1,6 @@
+[submodule "vendor/tweetnacl-js"]
+	path = vendor/tweetnacl-js
+	url = https://github.com/dchest/tweetnacl-js
+[submodule "vendor/tweetnacl-util-js"]
+	path = vendor/tweetnacl-util-js
+	url = https://github.com/dchest/tweetnacl-util-js

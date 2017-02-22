@@ -1,0 +1,149 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BlackNote</title>
+<meta name="description" content="BlackNote - send secret messages and sleep well at night">
+<link rel="stylesheet" href="{{.BaseURL}}/r/styles.css">
+<link rel="shortcut icon" href="{{.BaseURL}}/r/favicon.ico" type="image/x-icon">
+<link rel="icon" href="{{.BaseURL}}/r/favicon.ico" type="image/x-icon">
+</style>
+<!--[if lt IE 9]>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script>
+<![endif]-->
+</head>
+<body>
+<header>
+	<h1 id="logo">
+        <a style="background-image:url({{.BaseURL}}/r/logo.png);"
+         href="{{.Home}}" title="BlackNote" >
+            BlackNote
+        </a>
+    </h1>
+	<menu id="menu">
+		<ul>
+			<li><a href="{{.Home}}" title="Home">Home</a></li>
+			<li><a href="{{.Home}}#about" title="How it works">How it works</a></li>
+			<li><a href="https://github.com/aerstone/blacknote" title="BlackNote">BlackNote</a></li>
+		</ul>
+	</menu>
+</header>
+<main>
+	<h2 id="intro">BlackNote
+        <span>
+        An ephemeral secret sharing tool<p>Send encrypted secrets, retrieve it once, and it’s gone forever!</p>
+        </span>
+    </h2>
+	<noscript>
+      <p>
+        JavaScript is required... I know, I wish it didn't have to be this way
+        either 
+      </p>
+    </noscript>
+
+{{if eq .Type `index`}}	
+    <div id="pre-crypt">
+        <textarea class="inp-text" id="plaintext"
+            placeholder="Enter your message here..."></textarea>
+        <button href="#p" 
+         onclick="blacknote.genPaste(document.getElementById('plaintext').value); window.location='#p'">
+         Encrypt
+        </button>
+
+    </div>
+    <div id="error" class="hidden">
+       <p>ERROR</p> 
+    </div>
+    <div id="post-crypt" class="hidden">
+		<h3>Paste generated</h3>
+        <p>
+            Send this link to a friend. When they click on it your message will
+            be displayed and deleted
+        </p>
+
+        <div id="link"></div>
+        <div class="inline-bar">
+            <div id="select">
+                <button onclick="blacknote.selectLink()" text="Select" />
+                    Select
+                </button>
+            </div>
+            <div id="direct-link"></div>
+        </div>
+
+    </div>
+{{end}}	
+{{if eq .Type `notfound`}}
+	<h2 id="not-found">
+		404: Paste not found... 
+	</h2>
+	<h2>
+		Either the page does not exist or the message has been deleted
+	</h2>
+{{end}}
+{{if eq .Type `paste`}}	
+	<p class="warn" style="text-align: center">
+        This paste has been deleted from the server.
+    </p>
+    <p>
+        Decrypted text:
+    </p>
+	<textarea class="inp-text" id="secret">{{.Ciphertext}}</textarea>
+    <div>
+        <button onclick="window.location='{{.Home}}'"> Home </button>
+    </div>
+    <p>
+        Sending passwords? Keep them safe using a password manager such as 
+        <a href="https://www.keepassx.org" target="_blank">
+        KeePassX2
+        </a>
+        .
+    </p>
+
+{{end}}
+{{if eq .Type `notfound`}}
+{{else}}
+    <hr>
+	<section class="about">
+        <a name="about"></a>
+		<h4>How it works</h4>
+		<p>
+		Paste plaintext into the box above, and click the <strong>ENCRYPT</strong> 
+		button. A special link will be generated that contains all the information 
+		required to retrieve and decrypt your message. Simply send that entire 
+		link to someone using your preferred method of communication. The 
+		encrypted message will be deleted from the server the first time the 
+		message is retrieved.
+	</section>
+	
+	<section class="about">
+		<h4>Crypto information</h4>
+		<p>BlackNote has the following features:</p>
+		<ul>
+			<li>Pure JavaScript NaCL secretbox</li>
+			<li>xsalsa20-poly1305</li>
+			<li>Generated links use the # tag that are never sent by behaving browsers</li>
+			<li>Server only stores the encrypted message blobs</li>
+		</ul>
+		<p>
+        No cryptographic authentication is performed and browsers are the
+        source of the CSPRNG so be wary.
+        </p>
+		
+	</section>
+{{end}}
+</main>
+
+<footer>
+<div class="social inline-bar">
+</footer>
+<script src="{{.BaseURL}}/r/nacl.min.js"></script>
+<script src="{{.BaseURL}}/r/nacl-util.min.js"></script>
+<script src="{{.BaseURL}}/r/blacknote.js"></script>
+{{if eq .Type `paste`}}
+<script>window.onload = function() { blacknote.retrievePaste(); }</script>
+{{end}}
+</body>
+</html>
