@@ -7,7 +7,6 @@ var blacknote = {
         this.ciphertext = null;
         this.error = null;
     },
-    //TODO mats.error are wrong
     decodeNonce: function(nonce) {
         try {
             var n = nacl.util.decodeBase64(nonce);
@@ -44,8 +43,6 @@ var blacknote = {
         mats.nonce = nacl.util.encodeBase64(nacl.randomBytes(nacl.secretbox.nonceLength));
         mats.encrypt = function(e) {
             var p, n, m;
-            //TODO error check
-            //e.preventDefault();
             mats.error = '';
             if (!(n = blacknote.decodeNonce(mats.nonce))) return;
             if (!(p = blacknote.decodeKey(mats.key))) return;
@@ -64,8 +61,6 @@ var blacknote = {
         mats.ciphertext = blacknote.rfc4648Decode(ciphertext);
         mats.decrypt = function(e) {
             var p, n, b, m;
-            //TODO error check
-            //e.preventDefault();
             mats.error = '';
             if (!(n = blacknote.decodeNonce(mats.nonce))) return;
             if (!(p = blacknote.decodeKey(mats.key))) return;
@@ -149,15 +144,14 @@ var blacknote = {
         //encodes base64 to RFC4648 URL encoded
         req.send('ciphertext=' + blacknote.rfc4648Encode(a.ciphertext));
         req.onload = function() {
-            //TODO link?
             var baseURL = window.location.origin + window.location.pathname;
             var link = baseURL + "s/" + req.response + "#" + tag;
 
             var html = "<p>" + link + "</p>";
             document.getElementById("link").innerHTML = html;
 
-            html = "<a class='btn' href='" + link + "'>Direct Link</a>";
-            document.getElementById("direct-link").innerHTML = html;
+            //html = "<a class='btn' href='" + link + "'>Direct Link</a>";
+            //document.getElementById("direct-link").innerHTML = html;
 
             blacknote.hideCleartext();
             blacknote.showLink();
@@ -168,8 +162,7 @@ var blacknote = {
     },
     retrievePaste: function() {
         var plain = blacknote.decrypt(document.getElementById("secret").value, location.hash.split('#')[1]);
-        //TODO this probably needs more and validation, it's pretty half assed to be frank
-        document.getElementById("secret").value = plain.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        document.getElementById("secret").value = plain;
     },
     rfc4648Encode: function(b64txt) {
         return b64txt.replace(/\+/g, '-').replace(/\//g, '_')

@@ -1,0 +1,63 @@
+{{define "body"}}
+    <div id="pre-crypt">
+        <textarea class="inp-text" id="plaintext"
+            placeholder="Enter your message here..."></textarea>
+        <button href="#p" 
+         onclick="blacknote.genPaste(document.getElementById('plaintext').value); window.location='#p'">
+         Encrypt
+        </button>
+
+    </div>
+    <div id="error" class="hidden">
+       <p>ERROR</p> 
+    </div>
+    <div id="post-crypt" class="hidden">
+		<h3>BlackNote generated</h3>
+        <p>
+            Send this link to a friend. When they click on it your message will
+            be deleted and displayed.
+        </p>
+
+        <div id="link"></div>
+        <div class="inline-bar">
+            <div id="select">
+                <button onclick="blacknote.selectLink()" text="Select" />
+                    Select Text
+                </button>
+            </div>
+            <div id="select">
+                <button onclick="window.location='{{.Home}}/'"> New Paste </button>
+            </div>
+        </div>
+    </div>
+    <hr>
+	<section class="about">
+        <a name="about"></a>
+		<h4>Instructions:</h4>
+		<p>
+            <ol style="margin: 0px;">
+                <li>Enter plain-text into the box above</li>
+                <li>Click <strong>ENCRYPT</strong> ...
+                a secure link is then generated</li>
+                <li>Send the link to someone using your preferred method of
+                    communication</li> 
+            </ol>
+        </p>
+
+        <hr/>
+
+        <p>
+            Encryption keys are <strong>never</strong> sent to or stored on our
+            servers.
+        </p>
+        <p>
+            Generated links use the URL anchor (#) tag for encryption IV's and
+            encryption keys. This ensures the server never knows the encryption
+            keys. We could not recover your note even if we wanted to.
+        </p>
+        <p>
+            Notes are <strong>permanently</strong> deleted from our servers
+            after one view.
+        </p>
+	</section>
+{{end}}

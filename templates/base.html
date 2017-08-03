@@ -1,0 +1,104 @@
+{{define "base"}}<!doctype html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BlackNote</title>
+<meta name="description" content="BlackNote - send secret messages and sleep well at night">
+<meta name="author" content="Aerstone">
+<link rel="stylesheet" href="{{.BaseURL}}/r/styles.css">
+<link rel="shortcut icon" href="{{.BaseURL}}/r/favicon.ico" type="image/x-icon">
+<link rel="icon" href="{{.BaseURL}}/r/favicon.ico" type="image/x-icon">
+<style>
+
+ul li {
+    /* the css isn't templated, need to inject correct baseURL here */
+    list-style-image: url({{.BaseURL}}/r/check.png);
+}
+</style>
+<!--[if lt IE 9]>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script>
+<![endif]-->
+</head>
+
+<body>
+    <a target="_blank" href="https://github.com/aerstone/blacknote">
+        <img style="position: absolute; top: 0; right: 0; border: 0;"
+             src="{{.BaseURL}}/r/githubfork.png"
+             alt="Fork me on GitHub">
+    </a>
+
+<header>
+	<h1 id="logo">
+        <a style="background-image:url({{.BaseURL}}/r/logo.png);"
+         href="{{.Home}}/" title="BlackNote" >
+            BlackNote
+        </a>
+    </h1>
+	<menu id="menu">
+		<ul>
+			<li><a href="{{.Home}}/" title="Home">Home</a></li>
+			<li><a href="{{.Home}}/i" title="How it works">How it works</a></li>
+			<li><a href="https://aerstone.com" title="Aerstone">Aerstone</a></li>
+		</ul>
+	</menu>
+</header>
+
+<main>
+	<h2 id="intro">BlackNote
+        <span>
+        An ephemeral secret sharing tool
+        <p>
+            Send an encrypted secret, retrieve it once, and it’s gone forever!
+        </p>
+        </span>
+    </h2>
+	<noscript>
+      <p>
+        JavaScript is required... I know, I wish it didn't have to be this way
+        either 
+      </p>
+    </noscript>
+{{template "body" .}}
+</main>
+
+<footer>
+    <!--
+    <div class="tagline">
+        <p>
+            Software developed by Aerstone. We are pretty cool.
+        </p>
+    </div>
+    -->
+
+    <div class="social inline-bar">
+
+        <div class="left">
+            <a class="logo" style="background-image:url({{.BaseURL}}/r/aerstone-logo.png);"
+             href="http://www.aerstone.com/" target="_blank" title="Aerstone" >
+            </a>
+        </div>
+
+	
+		<div class="right">
+            <a class="icon li" target="_blank" href="https://www.linkedin.com/company/aerstone" title="LinkedIn" style="background-image:url({{.BaseURL}}/r/in.png);">&nbsp</a>
+        </div>
+		<div class="right">
+            <a class="icon" target="_blank" href="https://www.facebook.com/aerstone" title="Facebook" class="fb" style="background-image:url({{.BaseURL}}/r/fb.png);">&nbsp</a>
+        </div>
+		<div class="right">
+            <a class="icon" target="_blank" href="https://twitter.com/Aerstone" title="Twitter" class="twitter" style="background-image:url({{.BaseURL}}/r/twitter.png);">&nbsp</a>
+        </div>
+    </div>
+
+</footer>
+<script src="{{.BaseURL}}/r/nacl.min.js"></script>
+<script src="{{.BaseURL}}/r/nacl-util.min.js"></script>
+<script src="{{.BaseURL}}/r/blacknote.js"></script>
+{{if eq .Type `paste`}}
+<script>window.onload = function() { blacknote.retrievePaste(); }</script>
+{{end}}
+</body>
+</html>
+{{end}}
