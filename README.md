@@ -1,6 +1,8 @@
 BlackNote
 =========
-[![Build Status](https://travis-ci.org/Aerstone/BlackNote.svg?branch=testing)](https://travis-ci.org/Aerstone/BlackNote)
+
+Testing: [![Build Status](https://travis-ci.org/Aerstone/BlackNote.svg?branch=testing)](https://travis-ci.org/Aerstone/BlackNote)
+Master: [![Build Status](https://travis-ci.org/Aerstone/BlackNote.svg?branch=master)](https://travis-ci.org/Aerstone/BlackNote)
 
 **WARNING:** There has been no formal security review of the current BETA version. Use at your own risk.
 
