@@ -1,0 +1,126 @@
+{{define "body"}}
+<section class="about">
+    <div class="">
+        <h2>How it works</h2>
+        <div class="twocol">
+            <div class="colone">
+                <h4>Technical Details</h4>
+                <ul>
+                <li>
+                    Uses the 
+                    <a href="http://nacl.cr.yp.to/" target="_blank">NaCL</a>
+                    (pronounced "salt") cryptographic library
+                </li>
+                    <li>
+                        Encryption is performed client-side
+                    </li>
+                    <li>
+                        Server only stores encrypted messages
+                    </li>
+                    <li>
+                        Encrypted with <a target="_blank" href="https://en.wikipedia.org/wiki/Salsa20">xsalsa20</a>-<a target="_blank" href="https://en.wikipedia.org/wiki/Poly1305">poly1305</a> encryption algorithm and message authentication
+                    </li>
+                </ul>
+            </div>
+            <div class="coltwo">
+                <h4>BlackNote Workflow</h4>
+                <a href="{{.BaseURL}}/r/workflow.png" target="_blank">
+                    <div class="crop">
+                        <img src="{{.BaseURL}}/r/workflow.png"/>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <h4>Libraries</h4>
+        <div style="margin-left: 20px;">
+        <p>
+            We take the 
+            confidentiality of BlackNotes very seriously, and as such will
+            only use software that is proven to work.
+        </p>
+        <p>
+            The only third party library BlackNote uses is the
+            <a href="http://nacl.cr.yp.to/" target="_blank">NaCL</a>
+            (pronounced "salt") cryptographic library. Which has
+            been ported to JavaScript.
+        </p>
+        <p>
+            We only use one library to reduce the risk of vulnerabilities
+            being introduced through extra (often unnecessary) third party
+            libraries.
+        </p>
+        <p>
+            NaCL was chosen due to it's large usage world wide 
+            (<a href="https://download.libsodium.org/doc/" target="_blank">libsodium</a>),
+            proven capabilities, and simplicity.
+        </p>
+        <p>
+            Nacl is the reference implementation for a complete and simple to
+            use crypto library. It helps to remove all the intricate
+            key manipulation operations traditionally used in crypto simplifies
+            encryption to two calls, "box" and "unbox". It handles all the
+            padding and timing and prevents many of the common mistakes 
+            developers make when using authenticated ciphers.
+        </p>
+        </div>
+
+        <h4>Encryption</h4>
+        <div style="margin-left: 20px;">
+        <p>
+            BlackNotes are encrypted with 256 bit <i>symmetric</i> encryption
+            (<a href="https://en.wikipedia.org/wiki/Salsa20" target="_blank">xSalsa20</a>)
+            using keys generated within the browser (Chrome, Firefox, IE).
+        </p>
+        <p>
+            The encryption keys are <strong>never</strong> passed to the
+            server to ensure the integrity of all BlackNotes. This means
+            that we could never recover any of the BlackNotes even if
+            we wanted to.
+        </p>
+        </div>
+
+        <h4>Verification</h4>
+        <div style="margin-left: 20px;">
+        <p>
+            Each BlackNote is cryptographically verified using the 
+            <a href="https://en.wikipedia.org/wiki/Poly1305" target="_blank">Poly1305</a>
+            hashing algorithm.
+        </p>
+        <p>
+            If the integrity of the note is compromised, the decryption
+            process will not be performed.
+        </p>
+        </div>
+    </div>
+</section>
+<hr/>
+<section class="about">
+    <h4>Technical Limitations</h4>
+    <h5>
+        Cryptographic <i>authentication</i> is not performed.
+    </h5>
+    <div style="margin-left: 20px;">
+    <p>
+        This means that BlackNote cannot verify <strong>who</strong> sent a
+        BlackNote or <strong>who</strong> reads a BlackNote. 
+    </p>
+    <p>
+        When you receive a BlackNote link, your trust in the
+        <strong>author's</strong> identity is only as strong as your trust in 
+        the transport mechanism through which you received the BlackNote link
+        (email, chat, social media, IRC, etc.).
+    </p>
+    <p>
+        A higher trust in the transport mechanism means a higher trust
+        in the authenticity of the BlackNote.
+    </p>
+    <p>
+        You <strong>can</strong>, however, be confident that the BlackNote you
+        receive is exactly what the <strong>author</strong> intended (through
+        cryptographic verification) <strong>and</strong> that no other party
+        has accessed it.
+    </p>
+    </div>
+</section>
+{{end}}

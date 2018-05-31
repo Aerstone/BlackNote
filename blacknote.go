@@ -19,7 +19,7 @@ import (
 )
 
 var resourceDir = flag.String("r", "./resources", "Directory to pull resources from")
-var templateFile = flag.String("t", "./templates/template.html", "Template for index page")
+var templateFile = flag.String("t", "./templates/index.html", "Template for index page")
 var disableHTTPS = flag.Bool("I", false, "Disable TLS")
 var tlsCert = flag.String("c", "./server.crt", "TLS crt file")
 var tlsKey = flag.String("k", "./server.key", "TLS crt key file")
@@ -142,17 +142,63 @@ func genUID() string {
 	return hex.EncodeToString(c[:16])
 }
 
+func getTemplate(w http.ResponseWriter, page string) *template.Template {
+    var validPage = regexp.MustCompile("[^A-Za-z0-9]")
+    m := validPage.MatchString(page)
+    if m == true {
+        http.Error(w, "An error occured", 500)
+        logMessage(fmt.Sprintf("Render received an invalid file name: %s\n", page))
+        page = "notfound"
+    }
+
+    t, err := template.ParseFiles("templates/"+page+".html","templates/base.html")
+	if err != nil {
+		logError(err)
+	}
+    return t
+}
+
+// Render page
+func renderCiphertext(w http.ResponseWriter, page string, ciphertext string){
+    var t = getTemplate(w, page)
+    var home = ""
+    if *baseURL != "" {
+        home = *baseURL
+    }
+    var err = t.ExecuteTemplate(w, "base", Paste{BaseURL: *baseURL, Type: "notfound", Home: home, Ciphertext: ciphertext})
+	if err != nil {
+		logError(err)
+	}
+}
+
+func render(w http.ResponseWriter, page string){
+    var t = getTemplate(w, page)
+    var home = ""
+    if *baseURL != "" {
+        home = *baseURL
+    }
+	var err = t.ExecuteTemplate(w, "base", Paste{BaseURL: *baseURL, Home: home})
+	if err != nil {
+		logError(err)
+	}
+}
+
 // Handler for creating a paste (the index)
 func createHandler(w http.ResponseWriter, r *http.Request) {
 	if strings.TrimPrefix(r.URL.Path, *baseURL) != "/" {
 		errorHandler(w, r, http.StatusNotFound)
 		return
 	}
-	t, err := template.ParseFiles(*templateFile)
-	if err != nil {
-		logError(err)
+    render(w, "create")
+}
+
+// Handler for creating a paste (the index)
+func infoHandler(w http.ResponseWriter, r *http.Request) {
+	if strings.TrimPrefix(r.URL.Path, *baseURL) != "/i" {
+		errorHandler(w, r, http.StatusNotFound)
+		return
 	}
-	err = t.Execute(w, Paste{BaseURL: *baseURL, Type: "index"})
+    render(w, "info")
 }
 
 // Validation regexes for paths and URL compatible base64
@@ -163,15 +209,7 @@ var validBase64 = regexp.MustCompile("^(?:[A-Za-z0-9-_]{4})*(?:[A-Za-z0-9-_]{2}=
 func errorHandler(w http.ResponseWriter, r *http.Request, status int) {
 	w.WriteHeader(status)
 	if status == http.StatusNotFound {
-		t, err := template.ParseFiles(*templateFile)
-		if err != nil {
-			logError(err)
-		}
-		if *baseURL == "" {
-			err = t.Execute(w, Paste{BaseURL: *baseURL, Type: "notfound", Home: "/"})
-		} else {
-			err = t.Execute(w, Paste{BaseURL: *baseURL, Type: "notfound", Home: *baseURL})
-		}
+        render(w, "notfound")
 	}
 }
 
@@ -215,21 +253,8 @@ func secretHandler(w http.ResponseWriter, r *http.Request) {
 			if err != nil {
 				logError(err)
 			}
-			t, err := template.ParseFiles(*templateFile)
-			if err != nil {
-				logError(err)
-			}
-			if *baseURL == "" {
-				err = t.Execute(w, Paste{Ciphertext: string(paste), BaseURL: *baseURL, Type: "paste", Home: "/"})
-				if err != nil {
-					logError(err)
-				}
-			} else {
-				err = t.Execute(w, Paste{Ciphertext: string(paste), BaseURL: *baseURL, Type: "paste", Home: *baseURL})
-				if err != nil {
-					logError(err)
-				}
-			}
+
+            renderCiphertext(w, "read", string(paste))
 		}
 	}
 }
@@ -259,6 +284,7 @@ func main() {
 	*baseURL = strings.TrimSuffix(*baseURL, "/")
 	logMessage("initialized")
 	http.HandleFunc(*baseURL+"/", createHandler)
+	http.HandleFunc(*baseURL+"/i", infoHandler)
 	http.HandleFunc(*baseURL+"/s/", secretHandler)
 	http.Handle(*baseURL+"/r/", http.StripPrefix(*baseURL+"/r/", http.FileServer(http.Dir(*resourceDir))))
 	if *disableHTTPS {

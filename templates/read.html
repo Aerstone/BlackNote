@@ -1,0 +1,20 @@
+{{define "body"}}
+	<p class="warn" style="text-align: center">
+        This BlackNote has been deleted from the server.
+    </p>
+    <p>
+        Decrypted text:
+    </p>
+	<textarea class="inp-text" id="secret">{{.Ciphertext}}</textarea>
+    <div>
+        <button onclick="window.location='{{.Home}}/'"> Home </button>
+    </div>
+    <p>
+        Sending passwords? Keep them safe using a password manager such as 
+        <a href="https://www.keepassx.org" target="_blank">
+        KeePassX2
+        </a>
+        .
+    </p>
+    <script>window.onload = function() { blacknote.retrievePaste(); }</script>
+{{end}}
